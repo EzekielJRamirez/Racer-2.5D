@@ -34,9 +34,29 @@ public class main {
     // 164 - 168
     //164
     private static Vector<Vector<Vector<Integer>>> splitColors(BufferedImage input) {
-        Vector<Vector<Vector<Vector>>> ret = new Vector<Vector<Vector<Vector>>>();
+        Vector<Vector<Vector<Integer>>> ret = new Vector<Vector<Vector<Integer>>>();
 
-        for (int i = 0;i< input.getWidth() )
+        for (int i = 0;i< input.getWidth(); i++ )
+        {
+            Vector<Vector<Integer>> tempRow = new Vector<Vector<Integer>>();
+
+            for(int j = 0;j<input.getHeight();j++){
+
+                Vector <Integer> temp = new Vector <Integer>();
+                int rgb = input.getRGB(i,j);
+                int r = (rgb >> 16) & 0x000000FF;
+                int g = (rgb >> 8) & 0x000000FF;
+                int b = rgb & 0x000000FF;
+
+                temp.addElement(r);
+                temp.addElement(g);
+                temp.addElement(b);
+                tempRow.addElement(temp);
+            }
+
+            ret.addElement(tempRow);
+        }
+        return ret;
     }
 
     // 170 - 175
