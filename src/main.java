@@ -30,11 +30,15 @@ import java.awt.Polygon;
 import java.awt.Color;
 
 
-
 public class main {
-    // 164-168
+    // 164 - 168
     //164
-    private static Vector<Vector<Vector<Integer>>> splitColors
+    private static Vector<Vector<Vector<Integer>>> splitColors(BufferedImage input) {
+        Vector<Vector<Vector<Vector>>> ret = new Vector<Vector<Vector<Vector>>>();
+
+        for (int i = 0;i< input.getWidth() )
+    }
+
     // 170 - 175
     // 170
     Vector<Vector<Vector<Integer>>> userView = perspectiveFromRectangle(cameraView, base);
