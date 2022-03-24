@@ -187,5 +187,45 @@ private static class ImageObject {
     }
 
     // page 175
+    public Vector<Double> getCoords() {
+        return coords;
+    }
+
+    public void setCoords(Vector<Double> coordsinput) {
+        coords = coordsinput;
+        generateTriangles();
+        //printTriangles();
+    }
+
+    public void generateTriangles() {
+        triangles = new Vector<Double>();
+        // format: (0,1), (2,3), (4,5) is the (x,y) coords of a triangle
+
+        // get center point of all coordinates.
+        comX = getComX();
+        comY = getComY();
+
+        for (int i = 0; i < coords.size(); i = i + 2) {
+            triangles.addElement(coords.elementAt(i));
+            triangles.addElement(coords.elementAt(i + 1));
+
+            triangles.addElement(coords.elementAt((i + 2) % coords.size()));
+            triangles.addElement(coords.elementAt((i + 3) % coords.size()));
+
+            triangles.addElement(comX);
+            triangles.addElement(comY);
+        }
+    }
+
+    public void printTriangles() {
+        for (int i = 0; i < triangles.size(); i = i + 6) {
+            System.out.print("p0x: " + triangles.elementAt(i) + ", p0y: " +
+                    triangles.elementAt(i + 1));
+            System.out.print("p1x: " + triangles.elementAt(i + 2) +
+                    ", p1y: " + triangles.elementAt(i + 3));
+
+            // page 176, for next teammate
+        }
+    }
 }
 }
