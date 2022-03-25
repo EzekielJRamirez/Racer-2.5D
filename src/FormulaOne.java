@@ -1,5 +1,4 @@
 import java.util.Vector;
-
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.JButton;
@@ -72,9 +71,7 @@ public class FormulaOne {
 
     private static Vector<Vector<Vector<Integer>>> perspectiveFromRectangle(Vector<Vector<Vector<Integer>>> inputGrid, int base) {
         Vector<Vector<Vector<Integer>>> ret = new Vector<Vector<Vector<Integer>>>();
-
-        // allocate space for ret
-
+      
         for (int i = 0; i < inputGrid.size(); i++) {
             Vector<Vector<Integer>> tempRow = new Vector<Vector<Integer>>();
             for (int j = 0; j < inputGrid.elementAt(i).size(); j++) {
@@ -88,7 +85,6 @@ public class FormulaOne {
             ret.addElement(tempRow);
         }
         // 166
-
         // collapse rows from inputGrid into ret
         for (int i = 0; i < inputGrid.size(); i++) {
             for (int j = 0; j < inputGrid.elementAt(i).size(); j++) {
@@ -123,6 +119,47 @@ public class FormulaOne {
             }
             ret.addElement(tempRow);
         }
+      
+        // 167
+        for (int i = 0; i < inputImg.size(); i++) {
+            for (int j = 0; j < inputImg.elementAt(i).size(); j++) {
+                int newj = (int) (0.5 + xpos + ((double) j - xpos) * Math.cos(angle) - ((double) i - ypos) * Math.sin(angle));
+                int newi = (int) (0.5 + ypos + ((double) j - xpos) * Math.sin(angle) + ((double) i - ypos) * Math.cos(angle));
+                if (repeatImg) {
+                    while (newj >= ret.elementAt(0).size()) {
+                        newj = newj - ret.elementAt(0).size();
+                    }
+                    while (newj < 0) {
+                        newj = newj + ret.elementAt(0).size();
+                    }
+                    while (newi >= ret.size()) {
+                        newi = newi - ret.size();
+                    }
+                    while (newi < 0) {
+                        newi = newi + ret.size();
+                    }
+                }
+
+                if (newj < ret.elementAt(0).size() && newj >= 0) {
+                    if (newi < ret.size() && newi >= 0) {
+                        ret.elementAt(newi).elementAt(newj).set(0, inputImg.elementAt(i).elementAt(j).elementAt(0));
+                        ret.elementAt(newi).elementAt(newj).set(1, inputImg.elementAt(i).elementAt(j).elementAt(1));
+                        ret.elementAt(newi).elementAt(newj).set(2, inputImg.elementAt(i).elementAt(j).elementAt(2));
+                    }
+                }
+            }
+        }
+
+        return ret;
+    }
+
+    // 168
+    private static Vector<Vector<Vector<Integer>>> duplicate3x3() {
+
+    }
+
+    // 169
+
 
         // 167
         // This is where Colin is... 
@@ -173,7 +210,7 @@ public class FormulaOne {
             // page 171
         }
     }
-  
+
   public double getComX()
         {
         double ret=0;
