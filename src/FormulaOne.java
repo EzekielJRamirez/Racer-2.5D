@@ -1,19 +1,6 @@
-import javax.sound.sampled.AudioInputStream;
-import javax.sound.sampled.AudioSystem;
-import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.awt.image.AffineTransformOp;
-import java.time.LocalTime;
-import java.util.Random;
 import java.util.Vector;
-
-import java.time.Duration;
-import java.time.Instant;
-import java.util.Vector;
-import java.util.Random;
-
-import java.time.LocalTime;
-import java.time.temporal.ChronoUnit;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -21,7 +8,6 @@ import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.KeyStroke;
 import javax.swing.AbstractAction;
-import javax.swing.JComboBox;
 
 import javax.imageio.ImageIO;
 
@@ -32,25 +18,18 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 
-import java.awt.geom.AffineTransform;
-import java.awt.image.AffineTransformOp;
-import java.awt.Polygon;
 import java.awt.Color;
 
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 
-import javax.sound.sampled.AudioInputStream;
-import javax.sound.sampled.AudioSystem;
-import javax.sound.sampled.Clip;
-
-public class Merge {
+public class FormulaOne {
     public FormulaOne() {
         setup();
     }
 
     public static void setup() {
-        appFrame = new JFrame("The Legend of Zelda: Link's Awakening");
+        appFrame = new JFrame("F1 Racing");
         XOFFSET = 0;
         YOFFSET = 40;
         WINWIDTH = 500;
@@ -73,11 +52,11 @@ public class Merge {
 
         try {
             //TODO: place the image name into this line!!!
-            background = ImageIO.read(new File("PhotoNameHere"));
-            player = ImageIO.read(new File("djf"));
-            cockpit = ImageIO.read(new File(""));
-            track = ImageIO.read(new File("sdf"));
-            perspectiveTrack = convertToARGB(ImageIO.read(new File("fsd")));
+            background = ImageIO.read(new File("src/Track.png"));
+            player = ImageIO.read(new File("src/Wheel.png"));
+            cockpit = ImageIO.read(new File("src/Cockpit.png"));
+            track = ImageIO.read(new File("src/Track.png"));
+            perspectiveTrack = convertToARGB(ImageIO.read(new File("src/Track.png")));
         } catch (IOException ioe) {
 
         }
@@ -224,7 +203,7 @@ public class Merge {
     }
 
     private static void backgroundDraw() {
-        Graphics g = appFrame.getGrpahics();
+        Graphics g = appFrame.getGraphics();
         Graphics2D g2D = (Graphics2D) g;
 
         int xshift = XOFFSET + (int) ((p1.getAngle() / twoPi) * new Double(background.getWidth()) + 0.5);

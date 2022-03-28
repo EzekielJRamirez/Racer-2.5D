@@ -1,3 +1,4 @@
+/*
 import java.awt.*;
 import java.util.Vector;
 
@@ -8,7 +9,7 @@ public class main {
     Graphics g = appFrame.getGraphics();
     Graphics2D g2D = (Graphics2D) g;
 
-    for(int =0;i<rectHeight;i++)
+    for(int i=0; i<rectHeight; i++)
 
     {
         for (int j = 0; j < rectWidth; j++) {
@@ -229,3 +230,4 @@ private static class ImageObject {
     }
 }
 }
+*/
