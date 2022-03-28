@@ -175,8 +175,8 @@ public class Merge {
                 int sumx = (int) (p1velocity * Math.cos(p1.getAngle() - pi / 2.0) + 0.5);
                 int sumy = (int) (p1velocity * Math.sin(p1.getAngle() - pi / 2.0) + 0.5);
 
-                camerax = camerax + constrainToCap(camerax, sumx, trackMatrix, elementAt(0).size());
-                cameray = cameray + constrainToCap(cameray, sumy, trackMatrix, elementAt(0).size());
+                camerax = camerax + constrainToCap(camerax, sumx, trackMatrix.elementAt(0).size());
+                cameray = cameray + constrainToCap(cameray, sumy, trackMatrix.elementAt(0).size());
             }
         }
     }
@@ -320,48 +320,116 @@ public class Merge {
     }
 
     // 168
-    private static Vector<Vector<Vector<Integer>>> duplicate3x3() {
+    private static Vector<Vector<Vector<Integer>>> duplicate3x3(Vector<Vector<Vector<Integer>>> inputImg) {
+        Vector<Vector<Vector<Integer>>> ret = new Vector<>();
+        for (int i = 0; i < inputImg.size() * 3; i++) {
+            Vector<Vector<Integer>> tempRow = new Vector<>();
+            for (int j = 0; j < inputImg.elementAt(0).size() * 3; j++) {
+                Vector<Integer> tempPixel = new Vector<Integer>();
+                tempPixel.addElement(0);
+                tempPixel.addElement(0);
+                tempPixel.addElement(0);
 
-    }
-
-    // 170 - 175
-    // 170
-    Vector<Vector<Vector<Integer>>> userView = perspectiveFromRectangle(cameraView, base);
-    Graphics g = appFrame.getGraphics();
-    Graphics2D g2D = (Graphics2D) g;
-
-    for(int i =0;i<rectHeight;i++) {
-        for (int j = 0; j < rectWidth; j++) {
-            int alpha = 255;
-            int red = userView.elementAt(i).elementAt(j).elementAt(0);
-            int green = userView.elementAt(i).elementAt(j).elementAt(1);
-            int blue = userView.elementAt(i).elementAt(j).elementAt(2);
-
-            while (red < 0) {
-                red = red + 256;
+                tempRow.addElement(tempPixel);
             }
-            while (256 <= red) {
-                red = red - 256;
-            }
-            while (green < 0) {
-                green = green + 256;
-            }
-            while (256 <= green) {
-                green = green - 256;
-            }
-            while (blue < 0) {
-                blue = blue + 256;
-            }
-            while (256 <= blue) {
-                blue = blue - 256;
-            }
-            // page 171
-            Color myColor = new Color(red, green, blue);
-            int rgb = myColor.getRGB();
-            perspectiveTrack.setRGB(j, i, rgb);
+            ret.addElement(tempRow);
         }
+        for (int i = 0; i < ret.size(); i++) {
+            for (int j = 0; j < ret.elementAt(i).size(); j++) {
+                ret.elementAt(i).elementAt(j).set(0, inputImg.elementAt(i %
+                        inputImg.size()).elementAt(j % inputImg.elementAt(0).size()
+                ).elementAt(0));
+                ret.elementAt(i).elementAt(j).set(1, inputImg.elementAt(i %
+                        inputImg.size()).elementAt(j % inputImg.elementAt(0).size()
+                ).elementAt(1));
+                ret.elementAt(i).elementAt(j).set(2, inputImg.elementAt(i %
+                        inputImg.size()).elementAt(j % inputImg.elementAt(0).size()
+                ).elementAt(2));
+            }
+        }
+        return ret;
     }
-    g2D.drawImage(perspectiveTrack,XOFFSET,YOFFSET +yoffset,null);
+
+    private static void trackDraw() {
+        // use camera's position, p1's rotation, and trapezoid mapper.
+
+        int rectWidth = 500; //500
+        int rectHeight = 175; //200
+        int base = 150; //250
+        int xoffset = 0;
+        int yoffset = 232;
+        int scaledown = 5;
+
+        Vector<Vector<Vector<Integer>>> cameraView = new Vector<>();
+        for (int i = 0; i < rectHeight; i++) {
+            Vector<Vector<Integer>> tempRow = new Vector<>();
+            for (int j = 0; j < rectWidth; j++) {
+                Vector<Integer> tempRGB = new Vector<Integer>();
+
+                int indexi = cameray - (rectHeight - i); // % trackMatrix.size()
+                int indexj = camerax - (rectWidth - j + (int) (0.5 + ((double)
+                        rectWidth / 2.0)));
+
+                while (indexi < 0) {
+                    indexi = indexi + trackMatrix.size();
+                }
+                while (trackMatrix.size() <= indexi) {
+                    indexj = indexi - trackMatrix.size();
+                }
+                while (indexj < 0) {
+                    indexj = indexj + trackMatrix.elementAt(0).size();
+                }
+                while (trackMatrix.elementAt(0).size() < indexj) {
+                    indexj = indexj - trackMatrix.elementAt(0).size();
+                }
+
+                tempRGB.addElement(trackMatrix.elementAt(indexi).elementAt(
+                        indexi).elementAt(0));
+                tempRGB.addElement(trackMatrix.elementAt(indexi).elementAt(
+                        indexi).elementAt(1));
+                tempRGB.addElement(trackMatrix.elementAt(indexi).elementAt(
+                        indexi).elementAt(2));
+                tempRow.addElement(tempRGB);
+            }
+            cameraView.addElement(tempRow);
+        }
+        Vector<Vector<Vector<Integer>>> userView = perspectiveFromRectangle(cameraView, base);
+        Graphics g = appFrame.getGraphics();
+        Graphics2D g2D = (Graphics2D) g;
+
+        for (int i = 0; i < rectHeight; i++) {
+            for (int j = 0; j < rectWidth; j++) {
+                int alpha = 255;
+                int red = userView.elementAt(i).elementAt(j).elementAt(0);
+                int green = userView.elementAt(i).elementAt(j).elementAt(1);
+                int blue = userView.elementAt(i).elementAt(j).elementAt(2);
+
+                while (red < 0) {
+                    red = red + 256;
+                }
+                while (256 <= red) {
+                    red = red - 256;
+                }
+                while (green < 0) {
+                    green = green + 256;
+                }
+                while (256 <= green) {
+                    green = green - 256;
+                }
+                while (blue < 0) {
+                    blue = blue + 256;
+                }
+                while (256 <= blue) {
+                    blue = blue - 256;
+                }
+                // page 171
+                Color myColor = new Color(red, green, blue);
+                int rgb = myColor.getRGB();
+                perspectiveTrack.setRGB(j, i, rgb);
+            }
+        }
+        g2D.drawImage(perspectiveTrack, XOFFSET, YOFFSET + yoffset, null);
+    }
 
     private static void playerDraw() {
         Graphics g = appFrame.getGraphics();
@@ -546,90 +614,88 @@ public class Merge {
                         triangles.elementAt(i + 1));
                 System.out.print("p1x: " + triangles.elementAt(i + 2) +
                         ", p1y: " + triangles.elementAt(i + 3));
-
                 System.out.print("p2x: " + triangles.elementAt(i + 4) +
                         ", p2y: " + triangles.elementAt(i + 5));
             }
         }
-    }
-
-    public double getComX() {
-        double ret = 0;
-        if (coords.size() > 0) {
-            for (int i = 0; i < coords.size(); i = i + 2) {
-                ret = ret + coords.elementAt(i);
+        public double getComX() {
+            double ret = 0;
+            if (coords.size() > 0) {
+                for (int i = 0; i < coords.size(); i = i + 2) {
+                    ret = ret + coords.elementAt(i);
+                }
+                ret = ret / (coords.size() / 2.0);
             }
-            ret = ret / (coords.size() / 2.0);
+            return ret;
         }
-        return ret;
-    }
 
-    public double getComY() {
-        double ret = 0;
-        if (coords.size() > 0) {
-            for (int i = 1; i < coords.size(); i = i + 2) {
-                ret = ret + coords.elementAt(i);
+        public double getComY() {
+            double ret = 0;
+            if (coords.size() > 0) {
+                for (int i = 1; i < coords.size(); i = i + 2) {
+                    ret = ret + coords.elementAt(i);
+                }
+                ret = ret / (coords.size() / 2.0);
             }
-            ret = ret / (coords.size() / 2.0);
+            return ret;
         }
-        return ret;
-    }
 
-    public void move(double xinput, double yinput) {
-        x = x + xinput;
-        y = y + yinput;
-    }
+        public void move(double xinput, double yinput) {
+            x = x + xinput;
+            y = y + yinput;
+        }
 
-    public void moveto(double xinput, double yinput) {
-        x = xinput;
-        y = yinput;
-    }
+        public void moveto(double xinput, double yinput) {
+            x = xinput;
+            y = yinput;
+        }
 
-    public void screenWrap(double leftEdge, double rightEdge, double topEdge, double bottomEdge) {
-        if (x > rightEdge) {
-            moveto(leftEdge, getY());
+        public void screenWrap(double leftEdge, double rightEdge, double topEdge, double bottomEdge) {
+            if (x > rightEdge) {
+                moveto(leftEdge, getY());
+            }
+            if (x < leftEdge) {
+                moveto(rightEdge, getY());
+            }
+            if (y > bottomEdge) {
+                moveto(getX(), topEdge);
+            }
+            if (y < topEdge) {
+                moveto(getX(), bottomEdge);
+            }
         }
-        if (x < leftEdge) {
-            moveto(rightEdge, getY());
-        }
-        if (y > bottomEdge) {
-            moveto(getX(), topEdge);
-        }
-        if (y < topEdge) {
-            moveto(getX(), bottomEdge);
-        }
-    }
 
-    public void rotate(double angleinput) {
-        angle = angle + angleinput;
-        while (angle > twoPi) {
-            angle = angle - twoPi;
+        public void rotate(double angleinput) {
+            angle = angle + angleinput;
+            while (angle > twoPi) {
+                angle = angle - twoPi;
+            }
+            while (angle < 0) {
+                angle = angle + twoPi;
+            }
         }
-        while (angle < 0) {
-            angle = angle + twoPi;
-        }
-    }
 
-    public void spin(double internalangleinput) {
-        internalangle = internalangle + internalangleinput;
-        while (internalangle > twoPi) {
-            internalangle = internalangle - twoPi;
+        public void spin(double internalangleinput) {
+            internalangle = internalangle + internalangleinput;
+            while (internalangle > twoPi) {
+                internalangle = internalangle - twoPi;
+            }
+            while (internalangle < 0) {
+                internalangle = internalangle + twoPi;
+            }
         }
-        while (internalangle < 0) {
-            internalangle = internalangle + twoPi;
-        }
-    }
 
-    private double x;
-    private double y;
-    private double xwidth;
-    private double yheight;
-    private double angle; // in Radians
-    private double internalangle; // in Radians
-    private Vector<Double> coords;
-    private Vector<Double> triangles;
-    private double comX;
-    private double comY;
+        private double x;
+        private double y;
+        private double xwidth;
+        private double yheight;
+        private double angle; // in Radians
+        private double internalangle; // in Radians
+        private Vector<Double> coords;
+        private Vector<Double> triangles;
+        private double comX;
+        private double comY;
+    }
 
     private static void bindKey(JPanel myPanel, String input) {
         myPanel.getInputMap(IFW).put(KeyStroke.getKeyStroke( "pressed"  +
