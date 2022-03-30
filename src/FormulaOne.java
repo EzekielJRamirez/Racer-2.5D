@@ -207,8 +207,8 @@ public class FormulaOne {
         Graphics2D g2D = (Graphics2D) g;
 
         int xshift = XOFFSET + (int) ((p1.getAngle() / twoPi) * new Double(background.getWidth()) + 0.5);
-        g2D.drawImage(background, xshift, YOFFSET, null);
-        g2D.drawImage(background, xshift - background.getWidth(), YOFFSET, null);
+        g2D.drawImage(background, xshift, YOFFSET - 270, null);
+        //g2D.drawImage(background, xshift - background.getWidth(), YOFFSET, null);
         g2D.drawImage(cockpit, XOFFSET, cockpitShift, null);
         g2D.drawImage(rotateImageObject(p1).filter(player, null), (int) (p1.getX() + 0.5), (int) (p1.getY() + 0.5), null);
     }
